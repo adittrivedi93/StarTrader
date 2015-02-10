@@ -1,0 +1,118 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".LoginActivity">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="51dp"
+        android:text="Star Trader"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvTitle"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="29dp"
+        android:text="Reaching your trading potential!"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/etUser"
+        android:singleLine="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/textView"
+        android:layout_alignLeft="@+id/textView"
+        android:layout_alignRight="@+id/textView"
+        android:layout_alignStart="@+id/textView"
+        android:layout_below="@+id/textView"
+        android:layout_marginTop="63dp"
+        android:hint="Username"
+        android:gravity="center" />
+
+    <EditText
+        android:id="@+id/etPass"
+        android:singleLine="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/etUser"
+        android:layout_alignLeft="@+id/etUser"
+        android:layout_alignRight="@+id/etUser"
+        android:layout_alignStart="@+id/etUser"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:hint="Password" />
+
+    <TextView
+        android:id="@+id/tvRememberDetails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/tvTitle"
+        android:layout_alignRight="@+id/tvTitle"
+        android:layout_below="@+id/etPass"
+        android:layout_marginTop="34dp"
+        android:text="Remember Details?"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Button
+        android:id="@+id/btnLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvRememberDetails"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="29dp"
+        android:text="Login" />
+
+    <TextView
+        android:id="@+id/tvForgottenPass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/etPass"
+        android:layout_alignLeft="@+id/tvRememberDetails"
+        android:layout_alignRight="@+id/etPass"
+        android:layout_alignStart="@+id/tvRememberDetails"
+        android:layout_below="@+id/btnLogin"
+        android:layout_marginTop="29dp"
+        android:gravity="center"
+        android:text="Forgotten Password?"
+        android:clickable="true"
+        android:onClick="onClickForgottenPass"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@android:color/holo_blue_dark" />
+
+    <TextView
+        android:id="@+id/tvRegister"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/etPass"
+        android:layout_alignStart="@+id/etPass"
+        android:layout_below="@+id/tvForgottenPass"
+        android:text="New to Star Trader? Register here!"
+        android:clickable="true"
+        android:onClick="onClickRegister"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@android:color/holo_blue_dark" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cbRememberDetails"
+        android:checked="false"
+        android:layout_alignTop="@+id/tvRememberDetails"
+        android:layout_toRightOf="@+id/tvRememberDetails"
+        android:layout_toEndOf="@+id/tvRememberDetails"
+        android:layout_alignBottom="@+id/tvRememberDetails" />
+
+</RelativeLayout>

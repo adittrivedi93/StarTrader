@@ -1,0 +1,123 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".LoginActivity">
+
+    <TextView
+        android:id="@+id/tvTitleChartView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="Chart Viewer"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:id="@+id/etStockSymbol"
+        android:layout_below="@+id/tvTitleChartView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:gravity="center"
+        android:hint="Please enter Stock Symbol"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Enter start date:"
+        android:id="@+id/tvEnterStartDates"
+        android:layout_below="@+id/etStockSymbol"
+        android:layout_marginTop="30dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Enter finish date:"
+        android:gravity="right"
+        android:paddingRight="40dp"
+        android:id="@+id/tvEnterFinishDate"
+        android:layout_alignRight="@+id/etStockSymbol"
+        android:layout_alignEnd="@+id/etStockSymbol"
+        android:layout_alignTop="@+id/tvEnterStartDates" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="date"
+        android:ems="10"
+        android:id="@+id/etStartDate"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:hint="dd/mm/yyyy"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/tvEnterStartDates"
+        android:layout_alignRight="@+id/tvEnterStartDates"
+        android:layout_alignEnd="@+id/tvEnterStartDates" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="date"
+        android:ems="10"
+        android:editable="true"
+        android:hint="dd/mm/yyyy"
+        android:layout_marginTop="10dp"
+        android:id="@+id/etFinishDate"
+        android:layout_below="@+id/tvEnterFinishDate"
+        android:layout_alignRight="@+id/tvEnterFinishDate"
+        android:layout_alignEnd="@+id/tvEnterFinishDate"
+        android:layout_alignLeft="@+id/tvEnterFinishDate"
+        android:layout_alignStart="@+id/tvEnterFinishDate" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Select Time Horizon:"
+        android:id="@+id/tvTimeHorizon"
+        android:layout_centerVertical="true"
+        android:layout_below="@+id/etStartDate"/>
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:entries="@array/time_horizon_spinner"
+        android:id="@+id/spinnerTimeHorizon"
+        android:gravity="center"
+        android:layout_below="@+id/tvTimeHorizon"
+        android:spinnerMode="dropdown" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Generate Chart"
+        android:id="@+id/btnGenerateChart"
+        android:layout_below="@+id/spinnerTimeHorizon"
+        android:layout_centerHorizontal="true" />
+
+    <LinearLayout
+        android:layout_below="@id/btnGenerateChart"
+        android:id="@+id/graphLayout"
+        android:layout_width="fill_parent"
+        android:layout_height= "fill_parent"
+        android:orientation="vertical"/>
+
+</RelativeLayout>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">StarTrader</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Nav Drawer Item names -->
+    <string-array name= "nav_drawer_items">
+        <item>Rates</item>
+        <item>News</item>
+        <item>Charts</item>
+        <item>Profile</item>
+        <item>Logout</item>
+    </string-array>
+
+    <string-array name="time_horizon_spinner">
+        <item>Daily</item>
+        <item>Weekly</item>
+        <item>Monthly</item>
+    </string-array>
+
+    <!-- Nav Drawer List Item Icons -->
+    <array name = "nav_drawer_icons" >
+        <item>@drawable/ic_rates</item>
+        <item>@drawable/ic_news</item>
+        <item>@drawable/ic_charts</item>
+        <item>@drawable/ic_profile</item>
+        <item>@drawable/ic_logout</item>
+    </array>
+
+    <string name = "desc_list_item_icon">Item Icon</string>
+
+</resources>
