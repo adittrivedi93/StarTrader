@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TableRow>
+        <TextView
+            android:id="@+id/tvNewsTitle"
+            android:layout_width="wrap_content"
+            android:textColor="#454545"
+            android:textStyle="bold"
+            android:layout_height="75dp" />
+
+        <TextView
+            android:id="@+id/tvNewsDate"
+            android:textColor="#acacac"
+            android:textStyle="italic"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp" />
+
+        <TextView
+            android:id="@+id/tvNewsLink"
+            android:textColor="#acacac"
+            android:textStyle="italic"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp" />
+    </TableRow>
+
+
+</TableLayout>
