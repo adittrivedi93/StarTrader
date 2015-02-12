@@ -17,46 +17,39 @@ import java.util.List;
 public class YahooNewsAdapter extends ArrayAdapter<YahooFeedsData> {
 
     Context context;
-    int layoutResourceId;
-    ArrayList<YahooFeedsData> data = null;
+    ArrayList<YahooFeedsData> yahooFeedsDatas;
 
-    public YahooNewsAdapter (Context context, int layoutResourceId, ArrayList<YahooFeedsData> data) {
-        super(context, layoutResourceId, data);
-        this.layoutResourceId = layoutResourceId;
+    public YahooNewsAdapter(Context context, int resource,
+                            ArrayList<YahooFeedsData> yahooFeedsDatas) {
+        super(context, resource);
         this.context = context;
-        this.data = data;
+        this.yahooFeedsDatas = yahooFeedsDatas;
+    }
+
+    private class ViewHolder{
+        TextView txtTitle, txtDate, txtLink;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View row = convertView;
-        YahooFeedsDataHolder holder = null;
-
-        if(row == null)
-        {
-            LayoutInflater inflater = ((Activity)context).getLayoutInflater();
-            row = inflater.inflate(layoutResourceId, parent, false);
-
-            holder = new YahooFeedsDataHolder();
-            holder.title = (TextView) row.findViewById(R.id.tvNewsTitle);
-            holder.link = (TextView) row.findViewById(R.id.tvNewsLink);
-            holder.date = (TextView) row.findViewById(R.id.tvNewsDate);
-            row.setTag(holder);
+        ViewHolder holder = null;
+        YahooFeedsData yahooFeedsData = getItem(position);
+        LayoutInflater mInflater = (LayoutInflater)
+                context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+        if(convertView == null){
+            convertView = mInflater.inflate(R.layout.list_single_news, null);
+            holder = new ViewHolder();
+            holder.txtTitle = (TextView) convertView.findViewById(R.id.tvNewsTitle);
+            holder.txtDate = (TextView) convertView.findViewById(R.id.tvNewsDate);
+            holder.txtLink = (TextView) convertView.findViewById(R.id.tvNewsLink);
+            convertView.setTag(holder);
         }
-        else
-        {
-            holder = (YahooFeedsDataHolder)row.getTag();
+        else{
+            holder = (ViewHolder) convertView.getTag();
         }
-
-        YahooFeedsData yahooFeedsData = data.get(position);
-        holder.title.setText(yahooFeedsData.getTitle());
-        holder.link.setText(yahooFeedsData.getLink());
-        holder.date.setText(yahooFeedsData.getDate());
-
-        return row;
-    }
-
-    static class YahooFeedsDataHolder{
-        TextView title, link, date;
+        holder.txtTitle.setText(yahooFeedsData.getTitle());
+        holder.txtDate.setText(yahooFeedsData.getDate());
+        holder.txtLink.setText(yahooFeedsData.getLink());
+        return convertView;
     }
 }
