@@ -2,6 +2,7 @@ package com.example.adittrivedi.startrader;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,39 +18,61 @@ import java.util.List;
 public class YahooNewsAdapter extends ArrayAdapter<YahooFeedsData> {
 
     Context context;
-    ArrayList<YahooFeedsData> yahooFeedsDatas;
+    private ArrayList<YahooFeedsData> yahooFeedsDatas;
 
-    public YahooNewsAdapter(Context context, int resource,
-                            ArrayList<YahooFeedsData> yahooFeedsDatas) {
-        super(context, resource);
-        this.context = context;
+    public YahooNewsAdapter(ArrayList<YahooFeedsData> yahooFeedsDatas, Context context){
+        super(context, android.R.layout.simple_list_item_1, yahooFeedsDatas);
         this.yahooFeedsDatas = yahooFeedsDatas;
+        this.context = context;
     }
 
-    private class ViewHolder{
-        TextView txtTitle, txtDate, txtLink;
+    public int getCount(){
+        if(yahooFeedsDatas != null){
+            return yahooFeedsDatas.size();
+        }
+        return 0;
+    }
+
+    public YahooFeedsData getItem(int position){
+        if(yahooFeedsDatas != null){
+            return yahooFeedsDatas.get(position);
+        }
+        return null;
+    }
+
+    public long getItemId(int position) {
+        if (yahooFeedsDatas != null)
+            return yahooFeedsDatas.get(position).hashCode();
+        return 0;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = null;
-        YahooFeedsData yahooFeedsData = getItem(position);
-        LayoutInflater mInflater = (LayoutInflater)
-                context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-        if(convertView == null){
-            convertView = mInflater.inflate(R.layout.list_single_news, null);
-            holder = new ViewHolder();
-            holder.txtTitle = (TextView) convertView.findViewById(R.id.tvNewsTitle);
-            holder.txtDate = (TextView) convertView.findViewById(R.id.tvNewsDate);
-            holder.txtLink = (TextView) convertView.findViewById(R.id.tvNewsLink);
-            convertView.setTag(holder);
+        View v = convertView;
+        if(v == null){
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            v = inflater.inflate(R.layout.list_single_news, null);
         }
-        else{
-            holder = (ViewHolder) convertView.getTag();
-        }
-        holder.txtTitle.setText(yahooFeedsData.getTitle());
-        holder.txtDate.setText(yahooFeedsData.getDate());
-        holder.txtLink.setText(yahooFeedsData.getLink());
-        return convertView;
+
+        YahooFeedsData yahooFeedsData = yahooFeedsDatas.get(position);
+
+        TextView title = (TextView) convertView.findViewById(R.id.tvNewsTitle);
+        title.setText(yahooFeedsData.getTitle());
+
+        TextView date = (TextView) convertView.findViewById(R.id.tvNewsDate);
+        date.setText(yahooFeedsData.getDate());
+
+        TextView link = (TextView) convertView.findViewById(R.id.tvNewsLink);
+        link.setText(yahooFeedsData.getLink());
+
+        return v;
+    }
+
+    public List<YahooFeedsData> getYahooFeedsData() {
+        return yahooFeedsDatas;
+    }
+
+    public void setYahooFeedsDatas(ArrayList<YahooFeedsData> yahooFeedsDatas) {
+        this.yahooFeedsDatas = yahooFeedsDatas;
     }
 }

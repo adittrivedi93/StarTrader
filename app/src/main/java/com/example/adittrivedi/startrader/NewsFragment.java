@@ -3,10 +3,13 @@ package com.example.adittrivedi.startrader;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.SearchView;
 
 import org.jsoup.Jsoup;
@@ -24,11 +27,16 @@ public class NewsFragment extends ListFragment {
     private SearchView sView;
     private String stockQuote;
     private ArrayList<YahooFeedsData> yList = new ArrayList<YahooFeedsData>();
+    private ListView listView;
+    private YahooNewsAdapter yahooNewsAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View newsView = inflater.inflate(R.layout.news_fragment, container, false);
         sView = (SearchView) newsView.findViewById(R.id.searchViewNews);
+        listView = (ListView) newsView.findViewById(android.R.id.list);
+        yahooNewsAdapter = new YahooNewsAdapter(new ArrayList<YahooFeedsData>(), getActivity());
+        listView.setAdapter(yahooNewsAdapter);
         return newsView;
     }
 
@@ -54,17 +62,6 @@ public class NewsFragment extends ListFragment {
         });
     }
 
-    public void inflateListView() {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                YahooNewsAdapter yahooNewsAdapter = new YahooNewsAdapter(getActivity(),
-                        R.layout.list_single_news, yList);
-                setListAdapter(yahooNewsAdapter);
-            }
-        });
-    }
-
     private class DownloadYahooDataFeeds extends AsyncTask<String, Void, ArrayList<YahooFeedsData>> {
         ProgressDialog progressDialog = new ProgressDialog(getActivity());
 
@@ -79,7 +76,6 @@ public class NewsFragment extends ListFragment {
         @Override
         protected ArrayList<YahooFeedsData> doInBackground(String... url) {
             try {
-                yList.clear();
                 Document news = Jsoup.connect(url[0]).
                         userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.2 " +
                                 "(KHTML, like Gecko) Chrome/15.0.874.120 Safari/535.2").get();
@@ -92,7 +88,6 @@ public class NewsFragment extends ListFragment {
                                 item.select("pubDate").first().text());
                         yList.add(yahooFeedsData);
                     }
-                    inflateListView();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -106,6 +101,10 @@ public class NewsFragment extends ListFragment {
             if (progressDialog != null && progressDialog.isShowing()) {
                 progressDialog.dismiss();
             }
+            Log.d("Debug:", String.valueOf(yahooFeedsDatas.size()));
+            yahooNewsAdapter.setYahooFeedsDatas(yahooFeedsDatas);
+            yahooNewsAdapter.notifyDataSetChanged();
+            yList.clear();
         }
     }
 }
