@@ -4,6 +4,10 @@
     <string name="app_name">StarTrader</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="consumer_key">p1uOzfauLzYHVO5bVlDffolcw</string>
+    <string name="consumer_secret">jEVC7HY9iirc9WGXrh093RKj484v1raATwFmLBfiACgfL4HajX</string>
+    <string name="access_token">1657863926-uBOTHqGh0eZk1pB0MUzo6aY16vThNbxaiQQp8Ko</string>
+    <string name="access_secret">5pHuIFY7GWi5ZkpazkcAHuvCJz4KQdnU4t8FrvSTfdvgD</string>
 
     <!-- Nav Drawer Item names -->
     <string-array name= "nav_drawer_items">
