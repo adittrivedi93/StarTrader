@@ -1,8 +1,6 @@
 package com.example.adittrivedi.startrader;
 
-import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,6 +60,12 @@ public class YahooNewsAdapter extends ArrayAdapter<YahooFeedsData> {
         TextView date = (TextView) v.findViewById(R.id.tvNewsDate);
         date.setText(yahooFeedsData.getDate());
 
+<<<<<<< HEAD
+=======
+        TextView link = (TextView) v.findViewById(R.id.tvNewsLink);
+        link.setText(yahooFeedsData.getLink());
+
+>>>>>>> 266e5aadf12b73949269bdc7e8dc6531746cd5af
         return v;
     }
 
