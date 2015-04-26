@@ -14,7 +14,8 @@
         <item>Rates</item>
         <item>News</item>
         <item>Charts</item>
-        <item>Profile</item>
+        <item>Financial Glossary</item>
+        <item>Stock Data</item>
         <item>Logout</item>
     </string-array>
 
@@ -29,7 +30,8 @@
         <item>@drawable/ic_rates</item>
         <item>@drawable/ic_news</item>
         <item>@drawable/ic_charts</item>
-        <item>@drawable/ic_profile</item>
+        <item>@drawable/ic_glossary</item>
+        <item>@drawable/ic_data</item>
         <item>@drawable/ic_logout</item>
     </array>
 

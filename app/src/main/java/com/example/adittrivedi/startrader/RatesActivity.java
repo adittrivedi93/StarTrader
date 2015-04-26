@@ -67,10 +67,12 @@ public class RatesActivity extends ActionBarActivity {
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
         // Charts
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
-        // Profile, Will add a counter here
+        // Financial Glossary
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
-        // Logout
+        // Stock Data
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1)));
+        // Logout
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[5], navMenuIcons.getResourceId(5, -1)));
 
         // Recycle the typed array
         navMenuIcons.recycle();
@@ -161,9 +163,7 @@ public class RatesActivity extends ActionBarActivity {
         Fragment fragment = null;
         switch (position) {
             case 0:
-                Toast.makeText(RatesActivity.this,
-                        "Rates Selected", Toast.LENGTH_LONG).show();
-                //fragment = new HomeFragment();
+                fragment = new RatesFragment();
                 break;
             case 1:
                 fragment = new NewsTweetFragment();
@@ -172,12 +172,14 @@ public class RatesActivity extends ActionBarActivity {
                 fragment = new ChartsFragment();
                 break;
             case 3:
-                //fragment = new CommunityFragment();
+                fragment = new GlossaryFragment();
                 break;
             case 4:
+                fragment = new DataFragment();
+                break;
+            case 5:
                 Intent i = new Intent(this, LoginActivity.class);
                 startActivity(i);
-                //fragment = new PagesFragment();
                 break;
             default:
                 break;
@@ -194,7 +196,7 @@ public class RatesActivity extends ActionBarActivity {
             mDrawerLayout.closeDrawer(mDrawerList);
         } else {
             // error in creating fragment
-            Log.e("MainActivity", "Error in creating fragment");
+            //Log.e("MainActivity", "Error in creating fragment");
         }
     }
 

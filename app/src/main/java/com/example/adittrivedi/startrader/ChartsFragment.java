@@ -1,9 +1,11 @@
 package com.example.adittrivedi.startrader;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -15,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -26,6 +29,7 @@ import com.opencsv.CSVReader;
 import org.achartengine.ChartFactory;
 import org.achartengine.GraphicalView;
 import org.achartengine.chart.PointStyle;
+import org.achartengine.model.SeriesSelection;
 import org.achartengine.model.TimeSeries;
 import org.achartengine.model.XYMultipleSeriesDataset;
 import org.achartengine.model.XYSeries;
@@ -50,6 +54,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Scanner;
@@ -76,6 +81,20 @@ public class ChartsFragment extends Fragment {
         etStockSymbol = (EditText) rootView.findViewById(R.id.etStockSymbol);
         spnTimeHorizon = (Spinner) rootView.findViewById(R.id.spinnerTimeHorizon);
         chartView = (LinearLayout) rootView.findViewById(R.id.graphLayout);
+        btnCreateChart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getData();
+                ChartsFragmentHolder cHolder = new ChartsFragmentHolder(stockSymbol,
+                        trimTimeHorizon(timeHorizon), decodeDates(startDate).get(0),
+                        decodeDates(startDate).get(1), decodeDates(startDate).get(2),
+                        decodeDates(endDate).get(0), decodeDates(endDate).get(1),
+                        decodeDates(endDate).get(2));
+                //symbol, month, day, year, month, day, year, time horizon
+                DownloadYahooData yData = new DownloadYahooData();
+                yData.execute(getYahooData(cHolder));
+            }
+        });
         return rootView;
     }
 
@@ -103,7 +122,7 @@ public class ChartsFragment extends Fragment {
         year = Integer.parseInt(date.substring(6, 10));
         ArrayList<Integer> aList = new ArrayList<Integer>();
         aList.add(day);
-        aList.add(month-1);
+        aList.add(month - 1);
         aList.add(year);
         return aList;
     }
@@ -116,73 +135,116 @@ public class ChartsFragment extends Fragment {
                 cHolder.getTimeHorizon().toLowerCase() + "&ignore=.csv";
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+    private void drawChart(){
+        double maxClose = 0;
+        double minClose = 1000;
+        chartView.removeView(mChart);
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        TimeSeries ySeries = new TimeSeries(stockSymbol + " Chart");
+        for (int i = 0; i < yList.size(); i++) {
+            try {
+                Date date = dateFormat.parse(yList.get(i).getDate());
+                ySeries.add(date, yList.get(i).getClose());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
 
-        btnCreateChart.setOnClickListener(new View.OnClickListener() {
+        XYMultipleSeriesDataset yDataset = new XYMultipleSeriesDataset();
+        yDataset.addSeries(ySeries);
+
+        //set line attributes
+        XYSeriesRenderer yDataRenderer = new XYSeriesRenderer();
+        yDataRenderer.setColor(Color.BLACK);
+        yDataRenderer.setPointStyle(PointStyle.DIAMOND);
+        yDataRenderer.setLineWidth(3);
+        yDataRenderer.setFillPoints(true);
+
+        final XYMultipleSeriesRenderer multiRenderer = new XYMultipleSeriesRenderer();
+        multiRenderer.addSeriesRenderer(yDataRenderer);
+        multiRenderer.setChartTitle(stockSymbol.toUpperCase() + " Chart");
+        multiRenderer.setXTitle("Dates");
+        multiRenderer.setXLabels(20);
+        multiRenderer.setYTitle("Closing Price");
+        multiRenderer.setLabelsColor(Color.RED);
+
+        for (int i = 0; i < yList.size(); i++) {
+            multiRenderer.addXTextLabel(i, yList.get(i).getDate());
+            if(yList.get(i).getClose()>maxClose)
+                maxClose = yList.get(i).getClose();
+            if(yList.get(i).getClose()<minClose)
+                minClose = yList.get(i).getClose();
+        }
+        final double roundedMinClose = Math.round((minClose - 5)/ 10.0) * 10.0;
+        final double roundedMaxClose = Math.round((maxClose + 5)/ 10.0) * 10.0;
+
+        multiRenderer.clearYTextLabels();
+        for(double i = roundedMinClose; i<roundedMaxClose; i+=5){
+            multiRenderer.addYTextLabel(i, String.valueOf(i));
+        }
+        multiRenderer.setPointSize(5f);
+        multiRenderer.setShowGrid(true);
+        multiRenderer.setShowCustomTextGrid(true);
+        multiRenderer.setGridColor(Color.GRAY);
+        multiRenderer.setZoomButtonsVisible(true);
+        multiRenderer.setXLabelsColor(Color.RED);
+        multiRenderer.setYLabelsColor(0, Color.RED);
+        mChart = (GraphicalView) ChartFactory.getTimeChartView(getActivity(),
+                yDataset, multiRenderer, "dd-MMM-yyyy");
+        mChart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getData();
-                ChartsFragmentHolder cHolder = new ChartsFragmentHolder(stockSymbol,
-                        trimTimeHorizon(timeHorizon),decodeDates(startDate).get(0),
-                        decodeDates(startDate).get(1),decodeDates(startDate).get(2),
-                        decodeDates(endDate).get(0),decodeDates(endDate).get(1),
-                        decodeDates(endDate).get(2));
-                //symbol, month, day, year, month, day, year, time horizon
-                DownloadYahooData yData = new DownloadYahooData();
-                yData.execute(getYahooData(cHolder));
+                multiRenderer.setZoomEnabled(true, true);
+                multiRenderer.setZoomRate(3.4f);
+                multiRenderer.setPanEnabled(false);
+                multiRenderer.setYAxisMin(roundedMinClose);
+                multiRenderer.setYAxisMax(roundedMaxClose);
+                getDataPointValues(mChart);
             }
         });
+
+        multiRenderer.setClickEnabled(true);
+        chartView.addView(mChart);
     }
 
-    public void drawChart(){
-        getActivity().runOnUiThread(new Runnable() {
+    private void getDataPointValues(GraphicalView mChart)  {
+        SeriesSelection seriesSelection = mChart.getCurrentSeriesAndPoint();
+        if(seriesSelection != null){
+            int x = seriesSelection.getPointIndex();
+            Collections.reverse(yList);
+            Log.d("Position of point:", String.valueOf(x));
+            Log.d("Close value at point:", String.valueOf(yList.get(x).getClose()));
+            showPointDetails(x);
+        }
+    }
+
+    private void showPointDetails(int dataPoint)  {
+        int point = dataPoint;
+        AlertDialog.Builder pointDetailsBuilder = new AlertDialog.Builder(getActivity());
+        pointDetailsBuilder.setMessage("Date: " + convertDateFormat(dataPoint) + "\n"
+                    + "Open Price: $" + yList.get(point).getOpen() + "\n"
+                    + "High: $" + yList.get(point).getHigh() + "\n"
+                    + "Low: $" + yList.get(point).getLow() + "\n"
+                    + "Close: $" + yList.get(point).getClose() + "\n"
+                    + "Volume: " + yList.get(point).getVolume() + "\n"
+                    + "Adjusted Close*: $" + yList.get(point).getAdjustedClose() + "\n\n"
+                    + "* Close price adjusted for dividends and splits.");
+        pointDetailsBuilder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
-            public void run() {
-                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                TimeSeries ySeries = new TimeSeries(stockSymbol + " Chart");
-                for(int i = 0; i<yList.size();i++){
-                    try {
-                        Date date = dateFormat.parse(yList.get(i).getDate());
-                        //Log.v("YList", date.toString());
-                        ySeries.add(date, yList.get(i).getClose());
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                XYMultipleSeriesDataset yDataset = new XYMultipleSeriesDataset();
-                yDataset.addSeries(ySeries);
-
-                XYSeriesRenderer yDataRenderer = new XYSeriesRenderer();
-                yDataRenderer.setColor(Color.BLACK);
-                yDataRenderer.setPointStyle(PointStyle.DIAMOND);
-                yDataRenderer.setFillPoints(true);
-                yDataRenderer.setLineWidth(5);
-
-                XYMultipleSeriesRenderer multiRenderer = new XYMultipleSeriesRenderer();
-                multiRenderer.setChartTitle(stockSymbol.toUpperCase() + " Chart");
-                multiRenderer.setXTitle("Dates");
-                multiRenderer.setYTitle("Closing Price");
-                multiRenderer.setXLabels(20);
-                multiRenderer.setYLabelsColor(0,Color.RED);
-                multiRenderer.setLabelsColor(Color.RED);
-                multiRenderer.setZoomButtonsVisible(true);
-                multiRenderer.addSeriesRenderer(yDataRenderer);
-
-                for (int i = 0; i < yList.size(); i++) {
-                    multiRenderer.addXTextLabel(i, yList.get(i).getDate());
-                }
-
-                mChart = (GraphicalView) ChartFactory.getTimeChartView(getActivity(),
-                        yDataset, multiRenderer, "dd-MMM-yyyy");
-                multiRenderer.setClickEnabled(true);
-                multiRenderer.setSelectableBuffer(10);
-                chartView.addView(mChart);
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
             }
         });
+        AlertDialog alertDialog = pointDetailsBuilder.create();
+        alertDialog.show();
+    }
 
+    private String convertDateFormat(int dataPoint){
+        String dateInOldFormat = yList.get(dataPoint).getDate();
+        String dateInNewFormat = dateInOldFormat.substring(8)
+                + dateInOldFormat.substring(4, 8)
+                + dateInOldFormat.substring(0, 4);
+        return dateInNewFormat;
     }
 
     private class DownloadYahooData extends AsyncTask<String, Void, ArrayList<YahooDataHolder>>{
@@ -200,7 +262,7 @@ public class ChartsFragment extends Fragment {
             try{
                 yList.clear();
                 URL url = new URL (urls[0]);
-                Log.v("URL", urls[0]);
+                //Log.v("URL", urls[0]);
                 BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
                 String line = null;
                 line = in.readLine();
@@ -213,15 +275,11 @@ public class ChartsFragment extends Fragment {
                                 Double.parseDouble(tokens[1]), Double.parseDouble(tokens[2]),
                                 Double.parseDouble(tokens[3]), Double.parseDouble(tokens[4]),
                                 Double.parseDouble(tokens[5]), Double.parseDouble(tokens[6]));
-
                         yList.add(yHolder);
                     }
                 }
             } catch (Exception e){
                 e.printStackTrace();
-            }
-            if(yList.size()>0) {
-                drawChart();
             }
             return yList;
         }
@@ -231,6 +289,9 @@ public class ChartsFragment extends Fragment {
             super.onPostExecute(yahooDataHolders);
             if(progressDialog!=null && progressDialog.isShowing()){
                 progressDialog.dismiss();
+            }
+            if(yList.size()>0) {
+                drawChart();
             }
         }
     }

@@ -16,9 +16,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.adittrivedi.startrader.RatesActivity" />
-        <activity android:name="com.example.adittrivedi.startrader.ChartsFragment" />
-
+        <activity android:name=".RatesActivity" />
+        <activity android:name=".SentimentVisualisationActivity"/>
+        <activity android:name="org.achartengine.GraphicalActivity"/>
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

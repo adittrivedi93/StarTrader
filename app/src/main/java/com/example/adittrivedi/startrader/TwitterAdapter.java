@@ -71,7 +71,6 @@ public class TwitterAdapter extends ArrayAdapter<Status> {
     }
 
     public void setTweetsList(List<Status> tweetsList) {
-        Log.d("Size of list:", Integer.toString(tweetsList.size()));
         this.tweetsList = tweetsList;
     }
 }

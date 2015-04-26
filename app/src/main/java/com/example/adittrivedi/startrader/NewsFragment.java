@@ -44,7 +44,7 @@ public class NewsFragment extends ListFragment {
         listView = (ListView) newsView.findViewById(android.R.id.list);
         yahooNewsAdapter = new YahooNewsAdapter(new ArrayList<YahooFeedsData>(), getActivity());
         listView.setAdapter(yahooNewsAdapter);
-
+        sView.setIconifiedByDefault(false);
         sView.setQueryHint("Please enter a stock symbol for related news articles");
         sView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
